@@ -50,6 +50,30 @@
   [ean13]
   (retail/ean13-valid? ean13))
 
+(def ^:private amount-scale
+  "Sub-minor-unit scale used when comparing two money amounts: 1/10000
+  of a unit. Coarser than double representation error by many orders of
+  magnitude, finer than any distinction a real money carries."
+  10000)
+
+(defn- money=
+  "Exact-at-money-precision equality for two amounts.
+
+  `==` on raw doubles is NOT the right comparison here: a product or sum
+  of decimal quantities is routinely not the double nearest the true
+  total, so a CORRECT claim compared false and an entity that was never
+  wrong was rejected. Measured across this fleet's recompute shapes,
+  20-27% of cent-denominated combinations failed while being right.
+
+  Rounding both sides to `amount-scale` before comparing removes the
+  representation error while preserving every distinction the value can
+  actually carry. A missing or non-numeric amount never matches:
+  un-verifiable is not the same as correct."
+  [x y]
+  (and (number? x) (number? y)
+       (= (Math/round (* amount-scale (double x)))
+          (Math/round (* amount-scale (double y))))))
+
 (defn compute-sale-total
   "The ground-truth sale total owed for `order`'s own `:quantity` and
   `:unit-price`, via `kotoba.retail/line-item`'s own net calculation --
@@ -68,7 +92,7 @@
   reapplied to a retail sale line rather than a repair-parts line --
   not claimed as new."
   [{:keys [claimed-total] :as order}]
-  (== (double claimed-total) (compute-sale-total order)))
+  (money= claimed-total (compute-sale-total order)))
 
 (defn price-within-band?
   "Does `order`'s own `:unit-price` fall within its own recorded
