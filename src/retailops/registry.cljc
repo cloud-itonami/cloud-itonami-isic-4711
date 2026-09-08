@@ -25,7 +25,7 @@
   would keep, not the act of posting a sale or committing a reorder
   itself (that is `retailops.operation`'s `:sale/post`/`:reorder/
   commit`, always human-gated -- see README `Actuation`)."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [kotoba.retail :as retail]))
 
 (defn- unsigned-certificate
@@ -143,7 +143,7 @@
     (throw (ex-info "sale-completion: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "sale-completion: sequence must be >= 0" {})))
-  (let [sale-number (str (str/upper-case jurisdiction) "-SAL-" (zero-pad sequence 6))
+  (let [sale-number (str (str/upper jurisdiction) "-SAL-" (zero-pad sequence 6))
         record {"record_id" sale-number
                 "kind" "sale-posting-draft"
                 "order_id" order-id
@@ -167,7 +167,7 @@
     (throw (ex-info "reorder-commitment: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "reorder-commitment: sequence must be >= 0" {})))
-  (let [reorder-number (str (str/upper-case jurisdiction) "-ROR-" (zero-pad sequence 6))
+  (let [reorder-number (str (str/upper jurisdiction) "-ROR-" (zero-pad sequence 6))
         record {"record_id" reorder-number
                 "kind" "reorder-commitment-draft"
                 "order_id" order-id
