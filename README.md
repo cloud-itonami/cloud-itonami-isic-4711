@@ -76,7 +76,7 @@ autonomous, at any phase, by construction.** Two independent layers
 enforce this (`retailops.governor`'s `:actuation/post-sale`/
 `:actuation/commit-reorder` high-stakes gate and `retailops.phase`'s
 phase table, which never puts either op in any phase's `:auto` set) --
-see `retailops.phase`'s docstring and `test/retailops/phase_test.clj`'s
+see `retailops.phase`'s docstring and `test/retailops/phase_test.cljk`'s
 `sale-post-never-auto-at-any-phase`/`reorder-commit-never-auto-at-any-
 phase`. The actor may draft, check and recommend; a human shop
 operator is always the one who actually posts a sale or commits a
@@ -168,14 +168,14 @@ of the generic robotics/identity/forms/dmn/bpmn/audit-ledger stack.
 
 | File | Role |
 |---|---|
-| `src/retailops/store.cljc` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + sale-posting AND reorder-commitment history (dual history, matching every sibling actor's own shape). The double-actuation guard checks dedicated `:sale-posted?`/`:reorder-committed?` booleans rather than a `:status` value |
-| `src/retailops/registry.cljc` | Sale-posting/reorder-commitment draft records, wrapping `kotoba.retail`'s own `ean13-valid?`/`needs-reorder?`/`line-item` functions rather than reimplementing them; `sale-total-matches-claim?` is the ground-truth-recompute discipline every sibling actor's parts-cost check establishes, reapplied to a retail sale line |
-| `src/retailops/facts.cljc` | Per-jurisdiction consumer-protection AND unit-pricing/price-marking catalog with an official spec-basis citation per entry, honest coverage reporting -- ALL NINE seeded jurisdictions have a unit-pricing sub-citation here |
-| `src/retailops/retailopsllm.cljc` | **RetailOps-LLM** -- `mock-advisor` ‖ `llm-advisor`; intake/jurisdiction-assessment/sale-posting/reorder-commitment/reorder-receipt proposals |
-| `src/retailops/governor.cljc` | **Retail Governor** -- 6 HARD checks (spec-basis · evidence-incomplete · sale-total-mismatch · ean13-invalid, capability-lib reuse, the 71st unconditional-evaluation-discipline grounding · price-band-violation, FLAGSHIP NEW, the 72nd grounding · reorder-threshold-mismatch) + 2 double-actuation guards + 1 additive cross-actor cold-chain-handoff guard (superproject ADR-2800000500, `:reorder/receive`) + 1 soft (confidence/actuation gate) |
-| `src/retailops/phase.cljc` | **Phase 0→3** -- read-only → assisted intake → assisted assess → supervised (sale posting/reorder commitment always human; order intake and reorder receipt are the ONLY auto-eligible ops, no direct capital risk) |
-| `src/retailops/operation.cljc` | **OperationActor** -- langgraph StateGraph |
-| `src/retailops/sim.cljc` | demo driver |
+| `src/retailops/store.cljk` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + sale-posting AND reorder-commitment history (dual history, matching every sibling actor's own shape). The double-actuation guard checks dedicated `:sale-posted?`/`:reorder-committed?` booleans rather than a `:status` value |
+| `src/retailops/registry.cljk` | Sale-posting/reorder-commitment draft records, wrapping `kotoba.retail`'s own `ean13-valid?`/`needs-reorder?`/`line-item` functions rather than reimplementing them; `sale-total-matches-claim?` is the ground-truth-recompute discipline every sibling actor's parts-cost check establishes, reapplied to a retail sale line |
+| `src/retailops/facts.cljk` | Per-jurisdiction consumer-protection AND unit-pricing/price-marking catalog with an official spec-basis citation per entry, honest coverage reporting -- ALL NINE seeded jurisdictions have a unit-pricing sub-citation here |
+| `src/retailops/retailopsllm.cljk` | **RetailOps-LLM** -- `mock-advisor` ‖ `llm-advisor`; intake/jurisdiction-assessment/sale-posting/reorder-commitment/reorder-receipt proposals |
+| `src/retailops/governor.cljk` | **Retail Governor** -- 6 HARD checks (spec-basis · evidence-incomplete · sale-total-mismatch · ean13-invalid, capability-lib reuse, the 71st unconditional-evaluation-discipline grounding · price-band-violation, FLAGSHIP NEW, the 72nd grounding · reorder-threshold-mismatch) + 2 double-actuation guards + 1 additive cross-actor cold-chain-handoff guard (superproject ADR-2800000500, `:reorder/receive`) + 1 soft (confidence/actuation gate) |
+| `src/retailops/phase.cljk` | **Phase 0→3** -- read-only → assisted intake → assisted assess → supervised (sale posting/reorder commitment always human; order intake and reorder receipt are the ONLY auto-eligible ops, no direct capital risk) |
+| `src/retailops/operation.cljk` | **OperationActor** -- langgraph StateGraph |
+| `src/retailops/sim.cljk` | demo driver |
 | `test/retailops/*_test.clj` | governor contract · phase invariants · store parity · registry conformance · facts coverage |
 
 ## Business-process coverage (honest)

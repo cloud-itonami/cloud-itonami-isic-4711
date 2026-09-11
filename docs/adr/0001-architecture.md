@@ -141,7 +141,7 @@ isic-6492`'s real status-lifecycle bug (ADR-2607071320).
 `retailops.store/Store` is implemented by both `MemStore` (atom-
 backed, default for dev/tests/demo) and `DatomicStore` (`langchain.
 db`-backed), proven to satisfy the same contract in
-`test/retailops/store_contract_test.clj` -- the same seam every
+`test/retailops/store_contract_test.cljk` -- the same seam every
 sibling actor uses.
 
 ### Decision 9: `blueprint.edn` field-sync fix, and scoped-down R0
@@ -195,7 +195,7 @@ sale or auto-committing a reorder).
   71st) and `price-band-violation?` (FLAGSHIP, jurisdiction-grounded,
   72nd).
 - `MemStore` ‖ `DatomicStore` parity is proven by
-  `test/retailops/store_contract_test.clj`.
+  `test/retailops/store_contract_test.cljk`.
 - 44 tests / 186 assertions pass; lint is clean; the demo
   (`clojure -M:dev:run`) walks one clean sale lifecycle, one clean
   reorder lifecycle, and six HARD-hold scenarios end-to-end.
