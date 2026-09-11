@@ -1,5 +1,5 @@
 (ns retailops.sim
-  "Demo driver -- `clojure -M:dev:run`. Walks a clean order through
+  "Demo driver -- `kbb -M:dev:run`. Walks a clean order through
   intake -> jurisdiction assessment -> sale posting (escalate/approve/
   commit), then a SEPARATE clean order through intake -> jurisdiction
   assessment -> reorder commitment (escalate/approve/commit), then

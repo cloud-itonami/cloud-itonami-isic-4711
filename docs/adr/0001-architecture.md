@@ -197,7 +197,7 @@ sale or auto-committing a reorder).
 - `MemStore` ‖ `DatomicStore` parity is proven by
   `test/retailops/store_contract_test.cljk`.
 - 44 tests / 186 assertions pass; lint is clean; the demo
-  (`clojure -M:dev:run`) walks one clean sale lifecycle, one clean
+  (`kbb -M:dev:run`) walks one clean sale lifecycle, one clean
   reorder lifecycle, and six HARD-hold scenarios end-to-end.
 - `blueprint.edn` required a field-sync fix (`:robotics` was missing
   from `:required-technologies`) in addition to the `:maturity` flip.
