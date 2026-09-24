@@ -1,0 +1,33 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": a store robot performs shelving, picking,
+;; restocking and point-of-sale handling in a community retail store (ISIC
+;; 4711). The physical work: an arm lifting cases to the top shelf, and
+;; frozen cartons warming in the store air while the robot restocks the
+;; freezer bay.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-4711"
+ :cases
+ [{:id :restock-top-shelf
+   :kind :manipulator
+   :procedure "restocking arm on the cart lifts a case of goods from the cart deck to the top shelf of the gondola"
+   :params {:l1-m 0.90 :l2-m 0.80 :m1-kg 10.0 :m2-kg 6.0
+            :from [0.60 0.60] :to [0.35 1.50] :duration-s 2.0 :steps 400}
+   :sweep {:param :payload-kg :values [1.0 3.0 6.0 9.0 12.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 200.0 :basis "estimate: continuous shoulder torque of a ~10 kg-payload collaborative arm with a 1.7 m reach"}
+   :boundary {:lo 0.2 :hi 50.0}}
+  {:id :frozen-carton-out-of-freezer
+   :kind :thermal
+   :procedure "a 4 cm frozen-food carton at -18 C rides on the restock cart in 20 C store air, lying on other frozen cartons (bottom face adiabatic) with its top face exposed; the exposed face's heat-transfer coefficient is swept from an insulated tote lid (0.5) to an open cart (8), and the robot must shelve the carton before that face passes -15 C"
+   :params {:thickness-m 0.04 :conductivity-w-mk 1.5 :density-kg-m3 950.0 :specific-heat-j-kgk 2000.0
+            :t0-c -18.0 :t-hot-c 20.0 :h-front-w-m2k 0.0 :t-back-ambient-c 20.0
+            :threshold-c -15.0 :duration-s 14400.0 :nodes 11}
+   :sweep {:param :h-back-w-m2k :values [0.5 1.0 2.0 4.0 8.0]}
+   :quantity :time-to-threshold-s
+   :limit {:min 600.0 :basis "estimate: a freezer-bay restock takes up to 10 minutes; -15 C is -18 C plus a 3 C excursion allowance assumed from frozen-food practice, not a cited limit. Frozen-state properties; latent heat is not modelled"}
+   :boundary {:lo 0.5 :hi 8.0}}]}
